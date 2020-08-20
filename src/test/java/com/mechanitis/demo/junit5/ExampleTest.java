@@ -3,6 +3,7 @@ package com.mechanitis.demo.junit5;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExampleTest {
@@ -37,7 +39,7 @@ class ExampleTest {
         assertEquals(1, 1);
     }
 
-    @ParameterizedTest (name = "{0}")
+    @ParameterizedTest(name = "{0}")
     @DisplayName("Should create shapes with different numbers of sides")
     @ValueSource(ints = {3, 4, 5, 8, 14})
     void shouldCreateShapesWithDifferentNumbersOfSides(int expectedNumberOfSides) {
@@ -52,5 +54,37 @@ class ExampleTest {
 
         assertThrows(IllegalArgumentException.class,
                      () -> new Shape(expectedNumberOfSides));
+    }
+
+    @Nested
+    @DisplayName("When a shape has been created")
+    class WhenShapeExists {
+        private final Shape shape = new Shape(4);
+
+        @Nested
+        @DisplayName("Should allow")
+        class ShouldAllow {
+            @Test
+            @DisplayName("seeing the number of sides")
+            void seeingTheNumberOfSides() {
+                assertEquals(4, shape.numberOfSides());
+            }
+
+            @Test
+            @DisplayName("seeing the description")
+            void seeingTheDescription() {
+                assertEquals("Square", shape.description());
+            }
+        }
+
+        @Nested
+        @DisplayName("Should not")
+        class ShouldNot {
+            @Test
+            @DisplayName("be equal to another shape with the same number of sides")
+            void beEqualToAnotherShapeWithTheSameNumberOfSides() {
+                assertNotEquals(new Shape(4), shape);
+            }
+        }
     }
 }

@@ -13,4 +13,13 @@ public class Shape {
     public int numberOfSides() {
         return numberOfSides;
     }
+
+    public String description() {
+        return switch (numberOfSides) {
+            case 3 -> "Triangle";
+            case 4 -> "Square";
+            case 5 -> "Pentagon";
+            default -> "Shape with " + numberOfSides + " sides";
+        };
+    }
 }
